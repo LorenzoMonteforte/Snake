@@ -2,7 +2,72 @@ const snake = [
     {
         left : 100,
         top : 100,
-        div : null
+        div : null,
+        oldLeft : null,
+        oldTop : null
+    },
+    {
+        left : 100,
+        top : 110,
+        div : null,
+        oldLeft : null,
+        oldTop : null
+    },
+    {
+        left : 100,
+        top : 120,
+        div : null,
+        oldLeft : null,
+        oldTop : null
+    },
+    {
+        left : 100,
+        top : 130,
+        div : null,
+        oldLeft : null,
+        oldTop : null
+    },
+    {
+        left : 100,
+        top : 140,
+        div : null,
+        oldLeft : null,
+        oldTop : null
+    },
+    {
+        left : 100,
+        top : 150,
+        div : null,
+        oldLeft : null,
+        oldTop : null
+    },
+    {
+        left : 100,
+        top : 160,
+        div : null,
+        oldLeft : null,
+        oldTop : null
+    },
+    {
+        left : 100,
+        top : 170,
+        div : null,
+        oldLeft : null,
+        oldTop : null
+    },
+    {
+        left : 100,
+        top : 180,
+        div : null,
+        oldLeft : null,
+        oldTop : null
+    },
+    {
+        left : 100,
+        top : 190,
+        div : null,
+        oldLeft : null,
+        oldTop : null
     }
 ];
 const playArea = document.getElementById("playArea");
@@ -29,13 +94,43 @@ function arrowUp(){
     clearInterval(arrowLeftInterval);
     arrowUpInterval = setInterval(function(){
         for(let i=0; i<snake.length; i++){
-            snake[i].top = snake[i].top - 10;
-            if(snake[i].top < 0){
-                canPlay = false;
-                clearInterval(arrowUpInterval);
-                console.log("Hai perso");
+            snake[i].oldLeft = snake[i].left;
+            snake[i].oldTop = snake[i].top;
+            if(i == 0){
+                const newTop = snake[i].top - 10;
+                if(newTop >= 0){
+                    snake[i].top = newTop;
+                    snake[i].div.style.top = snake[i].top + "px";
+                }else{
+                    canPlay = false;
+                    console.log("Hai perso");
+                    clearInterval(arrowUpInterval);
+                    break;
+                }
             }else{
+                snake[i].left = snake[(i-1)].oldLeft;
+                snake[i].top = snake[(i-1)].oldTop;
+                snake[i].div.style.left = snake[i].left + "px";
                 snake[i].div.style.top = snake[i].top + "px";
+            }
+            if(i == (snake.length - 1)){
+                let rompi;
+                for(let index=0; index<snake.length; index++){
+                    if(index != 0){
+                        if((snake[0].left == snake[index].left) && (snake[0].top == snake[index].top)){
+                            canPlay = false;
+                            console.log("Hai perso");
+                            clearInterval(arrowUpInterval);
+                            rompi = true;
+                            break;    
+                        }else{
+                            rompi = false;
+                        }
+                    }
+                }
+                if(rompi == true){
+                    break;
+                }
             }
         }
     }, 1000);
@@ -51,13 +146,43 @@ function arrowRight(){
     clearInterval(arrowLeftInterval);
     arrowRightInterval = setInterval(function(){
         for(let i=0; i<snake.length; i++){
-            snake[i].left = snake[i].left + 10;
-            if(snake[i].left > 490){
-                canPlay = false;
-                clearInterval(arrowRightInterval);
-                console.log("Hai perso");
+            snake[i].oldLeft = snake[i].left;
+            snake[i].oldTop = snake[i].top;
+            if(i == 0){
+                const newLeft = snake[i].left + 10;
+                if(newLeft <= 490){
+                    snake[i].left = newLeft;
+                    snake[i].div.style.left = snake[i].left + "px";
+                }else{
+                    canPlay = false;
+                    console.log("Hai perso");
+                    clearInterval(arrowRightInterval);
+                    break;
+                }
             }else{
+                snake[i].left = snake[(i-1)].oldLeft;
+                snake[i].top = snake[(i-1)].oldTop;
                 snake[i].div.style.left = snake[i].left + "px";
+                snake[i].div.style.top = snake[i].top + "px";
+            }
+            if(i == (snake.length - 1)){
+                let rompi;
+                for(let index=0; index<snake.length; index++){
+                    if(index != 0){
+                        if((snake[0].left == snake[index].left) && (snake[0].top == snake[index].top)){
+                            canPlay = false;
+                            console.log("Hai perso");
+                            clearInterval(arrowRightInterval);
+                            rompi = true;
+                            break;    
+                        }else{
+                            rompi = false;
+                        }
+                    }
+                }
+                if(rompi == true){
+                    break;
+                }
             }
         }
     }, 1000);
@@ -73,13 +198,43 @@ function arrowDown(){
     clearInterval(arrowLeftInterval);
     arrowDownInterval = setInterval(function(){
         for(let i=0; i<snake.length; i++){
-            snake[i].top = snake[i].top + 10;
-            if(snake[i].top > 240){
-                canPlay = false;
-                clearInterval(arrowDownInterval);
-                console.log("Hai perso");
+            snake[i].oldLeft = snake[i].left;
+            snake[i].oldTop = snake[i].top;
+            if(i == 0){
+                const newTop = snake[i].top + 10;
+                if(newTop <= 240){
+                    snake[i].top = newTop;
+                    snake[i].div.style.top = snake[i].top + "px";
+                }else{
+                    canPlay = false;
+                    console.log("Hai perso");
+                    clearInterval(arrowDownInterval);
+                    break;
+                }
             }else{
+                snake[i].left = snake[(i-1)].oldLeft;
+                snake[i].top = snake[(i-1)].oldTop;
+                snake[i].div.style.left = snake[i].left + "px";
                 snake[i].div.style.top = snake[i].top + "px";
+            }
+            if(i == (snake.length - 1)){
+                let rompi;
+                for(let index=0; index<snake.length; index++){
+                    if(index != 0){
+                        if((snake[0].left == snake[index].left) && (snake[0].top == snake[index].top)){
+                            canPlay = false;
+                            console.log("Hai perso");
+                            clearInterval(arrowDownInterval);
+                            rompi = true;
+                            break;    
+                        }else{
+                            rompi = false;
+                        }
+                    }
+                }
+                if(rompi == true){
+                    break;
+                }
             }
         }
     }, 1000);
@@ -95,13 +250,43 @@ function arrowLeft(){
     clearInterval(arrowDownInterval);
     arrowLeftInterval = setInterval(function(){
         for(let i=0; i<snake.length; i++){
-            snake[i].left = snake[i].left - 10;
-            if(snake[i].left < 0){
-                canPlay = false;
-                clearInterval(arrowLeftInterval);
-                console.log("Hai perso");
+            snake[i].oldLeft = snake[i].left;
+            snake[i].oldTop = snake[i].top;
+            if(i == 0){
+                const newLeft = snake[i].left - 10;
+                if(newLeft >= 0){
+                    snake[i].left = newLeft;
+                    snake[i].div.style.left = snake[i].left + "px";
+                }else{
+                    canPlay = false;
+                    console.log("Hai perso");
+                    clearInterval(arrowLeftInterval);
+                    break;
+                }
             }else{
+                snake[i].left = snake[(i-1)].oldLeft;
+                snake[i].top = snake[(i-1)].oldTop;
                 snake[i].div.style.left = snake[i].left + "px";
+                snake[i].div.style.top = snake[i].top + "px";
+            }
+            if(i == (snake.length - 1)){
+                let rompi;
+                for(let index=0; index<snake.length; index++){
+                    if(index != 0){
+                        if((snake[0].left == snake[index].left) && (snake[0].top == snake[index].top)){
+                            canPlay = false;
+                            console.log("Hai perso");
+                            clearInterval(arrowLeftInterval);
+                            rompi = true;
+                            break;    
+                        }else{
+                            rompi = false;
+                        }
+                    }
+                }
+                if(rompi == true){
+                    break;
+                }
             }
         }
     }, 1000);

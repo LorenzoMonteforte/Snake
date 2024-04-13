@@ -19,3 +19,8 @@
     background-color: black;
     position: absolute;
 }
+
+.square:first-of-type{
+    background-color: red;
+    z-index: 1;
+}
