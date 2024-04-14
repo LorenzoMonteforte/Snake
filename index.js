@@ -1,70 +1,35 @@
 const snake = [
     {
-        left : 100,
-        top : 100,
+        left : 0,
+        top : 0,
         div : null,
         oldLeft : null,
         oldTop : null
     },
     {
-        left : 100,
-        top : 110,
+        left : 0,
+        top : 10,
         div : null,
         oldLeft : null,
         oldTop : null
     },
     {
-        left : 100,
-        top : 120,
+        left : 0,
+        top : 20,
         div : null,
         oldLeft : null,
         oldTop : null
     },
     {
-        left : 100,
-        top : 130,
+        left : 0,
+        top : 30,
         div : null,
         oldLeft : null,
         oldTop : null
     },
     {
-        left : 100,
-        top : 140,
-        div : null,
-        oldLeft : null,
-        oldTop : null
-    },
-    {
-        left : 100,
-        top : 150,
-        div : null,
-        oldLeft : null,
-        oldTop : null
-    },
-    {
-        left : 100,
-        top : 160,
-        div : null,
-        oldLeft : null,
-        oldTop : null
-    },
-    {
-        left : 100,
-        top : 170,
-        div : null,
-        oldLeft : null,
-        oldTop : null
-    },
-    {
-        left : 100,
-        top : 180,
-        div : null,
-        oldLeft : null,
-        oldTop : null
-    },
-    {
-        left : 100,
-        top : 190,
+        left : 0,
+        top : 40,
         div : null,
         oldLeft : null,
         oldTop : null
@@ -82,6 +47,35 @@ function createSnake(){
     }
 }
 createSnake();
+function createFood(){
+    let leftFood;
+    let topFood;
+    let foodPermitted = false;
+    while(foodPermitted == false){
+        leftFood = Math.trunc(Math.random() * 11);
+        while(leftFood % 10 != 0){
+            leftFood = Math.trunc(Math.random() * 11);
+        }
+        topFood =Math.trunc(Math.random() * 41);
+        while(topFood % 10 != 0){
+            topFood = Math.trunc(Math.random() * 41);
+        }
+        for(let i=0; i<snake.length; i++){
+            if((leftFood == snake[i].left) && (topFood == snake[i].top)){
+                foodPermitted = false;
+                break;
+            }else{
+                foodPermitted = true;
+            }
+        }
+    }
+    const food = document.createElement("div");
+    food.id = "food";
+    food.style.left = leftFood + "px";
+    food.style.top = topFood + "px";
+    playArea.appendChild(food);
+}
+createFood();
 const body = document.getElementById("body");
 let arrowUpInterval;
 function arrowUp(){
