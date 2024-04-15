@@ -1,35 +1,7 @@
 const snake = [
     {
-        left : 0,
-        top : 0,
-        div : null,
-        oldLeft : null,
-        oldTop : null
-    },
-    {
-        left : 0,
-        top : 10,
-        div : null,
-        oldLeft : null,
-        oldTop : null
-    },
-    {
-        left : 0,
-        top : 20,
-        div : null,
-        oldLeft : null,
-        oldTop : null
-    },
-    {
-        left : 0,
-        top : 30,
-        div : null,
-        oldLeft : null,
-        oldTop : null
-    },
-    {
-        left : 0,
-        top : 40,
+        left : 100,
+        top : 100,
         div : null,
         oldLeft : null,
         oldTop : null
@@ -47,18 +19,23 @@ function createSnake(){
     }
 }
 createSnake();
+let leftFood;
+let topFood;
+let numberFood = 0;
 function createFood(){
-    let leftFood;
-    let topFood;
+    if(numberFood > 0){
+        const oldFood = document.getElementById("food");
+        oldFood.parentNode.removeChild(oldFood);
+    }
     let foodPermitted = false;
     while(foodPermitted == false){
-        leftFood = Math.trunc(Math.random() * 11);
+        leftFood = Math.trunc(Math.random() * 500);
         while(leftFood % 10 != 0){
-            leftFood = Math.trunc(Math.random() * 11);
+            leftFood = Math.trunc(Math.random() * 500);
         }
-        topFood =Math.trunc(Math.random() * 41);
+        topFood =Math.trunc(Math.random() * 250);
         while(topFood % 10 != 0){
-            topFood = Math.trunc(Math.random() * 41);
+            topFood = Math.trunc(Math.random() * 250);
         }
         for(let i=0; i<snake.length; i++){
             if((leftFood == snake[i].left) && (topFood == snake[i].top)){
@@ -74,6 +51,7 @@ function createFood(){
     food.style.left = leftFood + "px";
     food.style.top = topFood + "px";
     playArea.appendChild(food);
+    numberFood++;
 }
 createFood();
 const body = document.getElementById("body");
@@ -87,6 +65,7 @@ function arrowUp(){
     clearInterval(arrowDownInterval);
     clearInterval(arrowLeftInterval);
     arrowUpInterval = setInterval(function(){
+        let isEating;
         for(let i=0; i<snake.length; i++){
             snake[i].oldLeft = snake[i].left;
             snake[i].oldTop = snake[i].top;
@@ -95,9 +74,31 @@ function arrowUp(){
                 if(newTop >= 0){
                     snake[i].top = newTop;
                     snake[i].div.style.top = snake[i].top + "px";
+                    if((snake[i].left == leftFood) && (snake[i].top == topFood)){
+                        const newSquare = document.createElement("div");
+                        newSquare.classList.add("square");
+                        playArea.appendChild(newSquare);
+                        snake.push(
+                            {
+                                left : snake[(snake.length - 1)].left,
+                                top : snake[(snake.length - 1)].top,
+                                div : newSquare,
+                                oldLeft : null,
+                                oldTop : null
+                            }
+                        );
+                        isEating = true;
+                        createFood();
+                    }else{
+                        isEating = false;
+                    }
                 }else{
                     canPlay = false;
-                    console.log("Hai perso");
+                    if(numberFood == 2){
+                        console.log("Hai perso dopo " + (numberFood - 1) + " mangiata.");
+                    }else{
+                        console.log("Hai perso dopo " + (numberFood - 1) + " mangiate.");
+                    }
                     clearInterval(arrowUpInterval);
                     break;
                 }
@@ -111,14 +112,34 @@ function arrowUp(){
                 let rompi;
                 for(let index=0; index<snake.length; index++){
                     if(index != 0){
-                        if((snake[0].left == snake[index].left) && (snake[0].top == snake[index].top)){
-                            canPlay = false;
-                            console.log("Hai perso");
-                            clearInterval(arrowUpInterval);
-                            rompi = true;
-                            break;    
+                        if((index == 1) && (isEating == false)){
+                            if((snake[0].left == snake[index].oldLeft) && (snake[0].top == snake[index].oldTop)){
+                                canPlay = false;
+                                if(numberFood == 2){
+                                    console.log("Hai perso dopo " + (numberFood - 1) + " mangiata.");
+                                }else{
+                                    console.log("Hai perso dopo " + (numberFood - 1) + " mangiate.");
+                                }
+                                clearInterval(arrowUpInterval);
+                                rompi = true;
+                                break;    
+                            }else{
+                                rompi = false;
+                            }
                         }else{
-                            rompi = false;
+                            if((snake[0].left == snake[index].left) && (snake[0].top == snake[index].top)){
+                                canPlay = false;
+                                if(numberFood == 2){
+                                    console.log("Hai perso dopo " + (numberFood - 1) + " mangiata.");
+                                }else{
+                                    console.log("Hai perso dopo " + (numberFood - 1) + " mangiate.");
+                                }
+                                clearInterval(arrowUpInterval);
+                                rompi = true;
+                                break;    
+                            }else{
+                                rompi = false;
+                            }
                         }
                     }
                 }
@@ -127,7 +148,7 @@ function arrowUp(){
                 }
             }
         }
-    }, 1000);
+    }, 500);
 }
 let arrowRightInterval;
 function arrowRight(){
@@ -139,6 +160,7 @@ function arrowRight(){
     clearInterval(arrowDownInterval);
     clearInterval(arrowLeftInterval);
     arrowRightInterval = setInterval(function(){
+        let isEating;
         for(let i=0; i<snake.length; i++){
             snake[i].oldLeft = snake[i].left;
             snake[i].oldTop = snake[i].top;
@@ -147,9 +169,31 @@ function arrowRight(){
                 if(newLeft <= 490){
                     snake[i].left = newLeft;
                     snake[i].div.style.left = snake[i].left + "px";
+                    if((snake[i].left == leftFood) && (snake[i].top == topFood)){
+                        const newSquare = document.createElement("div");
+                        newSquare.classList.add("square");
+                        playArea.appendChild(newSquare);
+                        snake.push(
+                            {
+                                left : snake[(snake.length - 1)].left,
+                                top : snake[(snake.length - 1)].top,
+                                div : newSquare,
+                                oldLeft : null,
+                                oldTop : null
+                            }
+                        );
+                        isEating = true;
+                        createFood();
+                    }else{
+                        isEating = false;
+                    }
                 }else{
                     canPlay = false;
-                    console.log("Hai perso");
+                    if(numberFood == 2){
+                        console.log("Hai perso dopo " + (numberFood - 1) + " mangiata.");
+                    }else{
+                        console.log("Hai perso dopo " + (numberFood - 1) + " mangiate.");
+                    }
                     clearInterval(arrowRightInterval);
                     break;
                 }
@@ -163,14 +207,34 @@ function arrowRight(){
                 let rompi;
                 for(let index=0; index<snake.length; index++){
                     if(index != 0){
-                        if((snake[0].left == snake[index].left) && (snake[0].top == snake[index].top)){
-                            canPlay = false;
-                            console.log("Hai perso");
-                            clearInterval(arrowRightInterval);
-                            rompi = true;
-                            break;    
+                        if((index == 1) && (isEating == false)){
+                            if((snake[0].left == snake[index].oldLeft) && (snake[0].top == snake[index].oldTop)){
+                                canPlay = false;
+                                if(numberFood == 2){
+                                    console.log("Hai perso dopo " + (numberFood - 1) + " mangiata.");
+                                }else{
+                                    console.log("Hai perso dopo " + (numberFood - 1) + " mangiate.");
+                                }
+                                clearInterval(arrowRightInterval);
+                                rompi = true;
+                                break;    
+                            }else{
+                                rompi = false;
+                            }
                         }else{
-                            rompi = false;
+                            if((snake[0].left == snake[index].left) && (snake[0].top == snake[index].top)){
+                                canPlay = false;
+                                if(numberFood == 2){
+                                    console.log("Hai perso dopo " + (numberFood - 1) + " mangiata.");
+                                }else{
+                                    console.log("Hai perso dopo " + (numberFood - 1) + " mangiate.");
+                                }
+                                clearInterval(arrowRightInterval);
+                                rompi = true;
+                                break;    
+                            }else{
+                                rompi = false;
+                            }
                         }
                     }
                 }
@@ -179,7 +243,7 @@ function arrowRight(){
                 }
             }
         }
-    }, 1000);
+    }, 500);
 }
 let arrowDownInterval;
 function arrowDown(){
@@ -191,6 +255,7 @@ function arrowDown(){
     clearInterval(arrowRightInterval);
     clearInterval(arrowLeftInterval);
     arrowDownInterval = setInterval(function(){
+        let isEating;
         for(let i=0; i<snake.length; i++){
             snake[i].oldLeft = snake[i].left;
             snake[i].oldTop = snake[i].top;
@@ -199,9 +264,31 @@ function arrowDown(){
                 if(newTop <= 240){
                     snake[i].top = newTop;
                     snake[i].div.style.top = snake[i].top + "px";
+                    if((snake[i].left == leftFood) && (snake[i].top == topFood)){
+                        const newSquare = document.createElement("div");
+                        newSquare.classList.add("square");
+                        playArea.appendChild(newSquare);
+                        snake.push(
+                            {
+                                left : snake[(snake.length - 1)].left,
+                                top : snake[(snake.length - 1)].top,
+                                div : newSquare,
+                                oldLeft : null,
+                                oldTop : null
+                            }
+                        );
+                        isEating = true;
+                        createFood();
+                    }else{
+                        isEating = false;
+                    }
                 }else{
                     canPlay = false;
-                    console.log("Hai perso");
+                    if(numberFood == 2){
+                        console.log("Hai perso dopo " + (numberFood - 1) + " mangiata.");
+                    }else{
+                        console.log("Hai perso dopo " + (numberFood - 1) + " mangiate.");
+                    }
                     clearInterval(arrowDownInterval);
                     break;
                 }
@@ -215,14 +302,34 @@ function arrowDown(){
                 let rompi;
                 for(let index=0; index<snake.length; index++){
                     if(index != 0){
-                        if((snake[0].left == snake[index].left) && (snake[0].top == snake[index].top)){
-                            canPlay = false;
-                            console.log("Hai perso");
-                            clearInterval(arrowDownInterval);
-                            rompi = true;
-                            break;    
+                        if((index == 1) && (isEating == false)){
+                            if((snake[0].left == snake[index].oldLeft) && (snake[0].top == snake[index].oldTop)){
+                                canPlay = false;
+                                if(numberFood == 2){
+                                    console.log("Hai perso dopo " + (numberFood - 1) + " mangiata.");
+                                }else{
+                                    console.log("Hai perso dopo " + (numberFood - 1) + " mangiate.");
+                                }
+                                clearInterval(arrowDownInterval);
+                                rompi = true;
+                                break;    
+                            }else{
+                                rompi = false;
+                            }
                         }else{
-                            rompi = false;
+                            if((snake[0].left == snake[index].left) && (snake[0].top == snake[index].top)){
+                                canPlay = false;
+                                if(numberFood == 2){
+                                    console.log("Hai perso dopo " + (numberFood - 1) + " mangiata.");
+                                }else{
+                                    console.log("Hai perso dopo " + (numberFood - 1) + " mangiate.");
+                                }
+                                clearInterval(arrowDownInterval);
+                                rompi = true;
+                                break;    
+                            }else{
+                                rompi = false;
+                            }
                         }
                     }
                 }
@@ -231,7 +338,7 @@ function arrowDown(){
                 }
             }
         }
-    }, 1000);
+    }, 500);
 }
 let arrowLeftInterval;
 function arrowLeft(){
@@ -243,6 +350,7 @@ function arrowLeft(){
     clearInterval(arrowRightInterval);
     clearInterval(arrowDownInterval);
     arrowLeftInterval = setInterval(function(){
+        let isEating;
         for(let i=0; i<snake.length; i++){
             snake[i].oldLeft = snake[i].left;
             snake[i].oldTop = snake[i].top;
@@ -251,9 +359,31 @@ function arrowLeft(){
                 if(newLeft >= 0){
                     snake[i].left = newLeft;
                     snake[i].div.style.left = snake[i].left + "px";
+                    if((snake[i].left == leftFood) && (snake[i].top == topFood)){
+                        const newSquare = document.createElement("div");
+                        newSquare.classList.add("square");
+                        playArea.appendChild(newSquare);
+                        snake.push(
+                            {
+                                left : snake[(snake.length - 1)].left,
+                                top : snake[(snake.length - 1)].top,
+                                div : newSquare,
+                                oldLeft : null,
+                                oldTop : null
+                            }
+                        );
+                        isEating = true;
+                        createFood();
+                    }else{
+                        isEating = false;
+                    }
                 }else{
                     canPlay = false;
-                    console.log("Hai perso");
+                    if(numberFood == 2){
+                        console.log("Hai perso dopo " + (numberFood - 1) + " mangiata.");
+                    }else{
+                        console.log("Hai perso dopo " + (numberFood - 1) + " mangiate.");
+                    }
                     clearInterval(arrowLeftInterval);
                     break;
                 }
@@ -267,14 +397,34 @@ function arrowLeft(){
                 let rompi;
                 for(let index=0; index<snake.length; index++){
                     if(index != 0){
-                        if((snake[0].left == snake[index].left) && (snake[0].top == snake[index].top)){
-                            canPlay = false;
-                            console.log("Hai perso");
-                            clearInterval(arrowLeftInterval);
-                            rompi = true;
-                            break;    
+                        if((index == 1) && (isEating == false)){
+                            if((snake[0].left == snake[index].oldLeft) && (snake[0].top == snake[index].oldTop)){
+                                canPlay = false;
+                                if(numberFood == 2){
+                                    console.log("Hai perso dopo " + (numberFood - 1) + " mangiata.");
+                                }else{
+                                    console.log("Hai perso dopo " + (numberFood - 1) + " mangiate.");
+                                }
+                                clearInterval(arrowLeftInterval);
+                                rompi = true;
+                                break;    
+                            }else{
+                                rompi = false;
+                            }
                         }else{
-                            rompi = false;
+                            if((snake[0].left == snake[index].left) && (snake[0].top == snake[index].top)){
+                                canPlay = false;
+                                if(numberFood == 2){
+                                    console.log("Hai perso dopo " + (numberFood - 1) + " mangiata.");
+                                }else{
+                                    console.log("Hai perso dopo " + (numberFood - 1) + " mangiate.");
+                                }
+                                clearInterval(arrowLeftInterval);
+                                rompi = true;
+                                break;    
+                            }else{
+                                rompi = false;
+                            }
                         }
                     }
                 }
@@ -283,7 +433,7 @@ function arrowLeft(){
                 }
             }
         }
-    }, 1000);
+    }, 500);
 }
 let canPlay = true;
 let canArrowUp = true;
